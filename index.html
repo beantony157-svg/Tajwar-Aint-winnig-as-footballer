@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mir Tajwar Alam</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0e;
+    --surface: #141416;
+    --surface2: #1c1c20;
+    --border: rgba(255,255,255,0.07);
+    --accent: #e8c97a;
+    --accent2: #7ac4e8;
+    --text: #f0ede8;
+    --muted: #6b6b72;
+    --dim: #3a3a42;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  .glow-orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+  .glow-orb.g1 { width: 400px; height: 400px; background: rgba(232,201,122,0.07); top: -100px; right: -100px; }
+  .glow-orb.g2 { width: 350px; height: 350px; background: rgba(122,196,232,0.05); bottom: 0; left: -100px; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 30px;
+    margin-bottom: 60px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .header-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 8vw, 72px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .name span { color: var(--accent); font-style: italic; }
+
+  .tagline {
+    margin-top: 14px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    max-width: 360px;
+    line-height: 1.8;
+  }
+
+  .avatar-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .avatar-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent), var(--accent2), transparent, var(--accent));
+    z-index: -1;
+    animation: spin 6s linear infinite;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--dim) 60%, transparent 100%);
+    margin-bottom: 46px;
+    animation: fadeUp 0.9s ease 0.1s both;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { margin-bottom: 50px; animation: fadeUp 0.8s ease both; }
+  section:nth-child(3) { animation-delay: 0.1s; }
+  section:nth-child(4) { animation-delay: 0.15s; }
+  section:nth-child(5) { animation-delay: 0.2s; }
+  section:nth-child(6) { animation-delay: 0.25s; }
+  section:nth-child(7) { animation-delay: 0.3s; }
+  section:nth-child(8) { animation-delay: 0.35s; }
+  section:nth-child(9) { animation-delay: 0.4s; }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-num { font-size: 10px; color: var(--accent); letter-spacing: 0.15em; }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ─── ABOUT ─── */
+  .about-text {
+    font-size: 13px;
+    line-height: 2;
+    color: #c4bfb8;
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+  }
+
+  /* ─── INFO GRID ─── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+  }
+
+  .info-item {
+    background: var(--surface);
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .info-item:hover { border-color: rgba(232,201,122,0.25); background: var(--surface2); }
+  .info-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+  .info-value { font-size: 13px; color: var(--text); }
+
+  /* ─── SKILLS ─── */
+  .skills-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .skill-tag {
+    padding: 8px 16px;
+    border: 1px solid var(--dim);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #b8b3ac;
+    transition: border-color 0.2s, color 0.2s;
+    cursor: default;
+    touch-action: manipulation;
+  }
+
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+  .skill-tag.highlight {
+    border-color: rgba(232,201,122,0.4);
+    color: var(--accent);
+    background: rgba(232,201,122,0.05);
+  }
+
+  /* ─── TAJWAR FILES ─── */
+  .gallery-toggle-btn {
+    width: 100%;
+    padding: 22px 20px;
+    background: var(--surface);
+    border: 1px solid var(--dim);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .gallery-toggle-btn:hover, .gallery-toggle-btn:active {
+    background: var(--surface2);
+    border-color: rgba(232,201,122,0.5);
+  }
+
+  .filter-tabs { display: flex; gap: 2px; margin: 2px 0; }
+
+  .filter-tab {
+    flex: 1;
+    padding: 13px 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .filter-tab:hover { color: var(--accent); border-color: rgba(232,201,122,0.3); }
+  .filter-tab.active {
+    background: rgba(232,201,122,0.08);
+    border-color: rgba(232,201,122,0.5);
+    color: var(--accent);
+  }
+
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 2px;
+  }
+
+  .gal-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    aspect-ratio: 1;
+    overflow: hidden;
+    cursor: zoom-in;
+    transition: border-color 0.2s;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .gal-item:hover { border-color: rgba(232,201,122,0.35); }
+
+  .gal-item img, .vid-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+
+  .gal-item:hover img, .gal-item:hover .vid-thumb { transform: scale(1.05); }
+
+  .video-item { cursor: pointer; }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: rgba(255,255,255,0.92);
+    background: rgba(0,0,0,0.38);
+    transition: background 0.2s;
+  }
+
+  .video-item:hover .play-overlay { background: rgba(0,0,0,0.55); }
+
+  /* ─── LIGHTBOX ─── */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.96);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overscroll-behavior: contain;
+  }
+
+  #lightbox.open { display: flex; }
+
+  .lb-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #lightbox-img {
+    max-width: 92vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border: 1px solid rgba(232,201,122,0.2);
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    display: none;
+  }
+
+  #lightbox-vid {
+    max-width: 92vw;
+    max-height: 85vh;
+    outline: none;
+    display: none;
+    border: 1px solid rgba(232,201,122,0.15);
+  }
+
+  .lb-close {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 16px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .lb-close:hover { background: rgba(255,255,255,0.22); }
+
+  /* ─── EXPERIENCE ─── */
+  .exp-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .exp-item:hover { border-color: rgba(232,201,122,0.2); }
+
+  .exp-year {
+    background: var(--surface2);
+    padding: 20px 14px;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+    word-break: break-word;
+    text-align: center;
+  }
+
+  .exp-content { padding: 20px 20px; }
+
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .exp-company { font-size: 11px; color: var(--accent2); margin-bottom: 8px; letter-spacing: 0.05em; }
+  .exp-desc { font-size: 11px; color: var(--muted); line-height: 1.8; }
+
+  /* ─── EDUCATION ─── */
+  .edu-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .edu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .edu-item:hover { border-color: rgba(122,196,232,0.25); }
+
+  .edu-degree {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .edu-school { font-size: 10px; color: var(--muted); }
+  .edu-year { font-size: 10px; color: var(--accent2); letter-spacing: 0.12em; white-space: nowrap; flex-shrink: 0; }
+
+  /* ─── INTERESTS ─── */
+  .interest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 2px;
+  }
+
+  .interest-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 16px;
+    text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .interest-card:hover { border-color: rgba(232,201,122,0.3); transform: translateY(-2px); }
+  .interest-icon { font-size: 24px; margin-bottom: 10px; }
+  .interest-name { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+
+  /* ─── CONTACT ─── */
+  .contact-row { display: flex; flex-wrap: wrap; gap: 2px; }
+
+  .contact-btn {
+    flex: 1;
+    min-width: 200px;
+    padding: 16px 20px;
+    border: 1px solid var(--dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .contact-btn:hover, .contact-btn:active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,201,122,0.04);
+  }
+
+  .contact-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    margin-top: 70px;
+    padding-top: 26px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 600px) {
+    .container { padding: 30px 14px 60px; }
+
+    header {
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .avatar-wrap { width: 78px; height: 78px; }
+    .tagline { font-size: 10px; max-width: 100%; }
+
+    .info-grid { grid-template-columns: 1fr 1fr; }
+
+    .exp-item { grid-template-columns: 72px 1fr; }
+    .exp-year { font-size: 9px; padding: 16px 10px; }
+    .exp-content { padding: 16px 14px; }
+
+    .edu-item { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .edu-year { align-self: flex-end; }
+
+    .interest-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .gal-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .contact-btn { min-width: 100%; }
+
+    footer { flex-direction: column; gap: 6px; text-align: center; }
+
+    .filter-tab { font-size: 10px; padding: 12px 4px; }
+  }
+
+  @media (max-width: 380px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; }
+    .exp-year { border-right: none; border-bottom: 1px solid var(--border); padding: 10px 14px; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-orb g1"></div>
+<div class="glow-orb g2"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div>
+      <div class="header-label">Personal Profile · 2026</div>
+      <h1 class="name">Mir Tajwar <span>Alam</span></h1>
+      <p class="tagline">Dreaming of going to the UK — armed with zero money, a YouTube watching skill, and football.</p>
+    </div>
+    <div class="avatar-wrap">
+      <img src="3.png" alt="Tajwar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <span class="section-title">About</span>
+      <span class="section-line"></span>
+    </div>
+    <p class="about-text">
+      I'm the type of person who genuinely thinks I'm rich — but doesn't have enough money to go to any country. Still convinced nothing is better than the UK. I think I'm fully independent, but can't even walk straight without my mom by my side.
+    </p>
+  </section>
+
+  <!-- PERSONAL INFO -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <span class="section-title">Personal Info</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label">Full Name</div>
+        <div class="info-value">Mir Tajwar Alam</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Date of Birth</div>
+        <div class="info-value">30 November 2011</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Nationality</div>
+        <div class="info-value">Bangladeshi</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Location</div>
+        <div class="info-value">Dhaka, Bangladesh</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Phone</div>
+        <div class="info-value">+880 1717 580091</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Languages</div>
+        <div class="info-value">English, Bengali</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <span class="section-title">Skills</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="skills-wrap">
+      <span class="skill-tag highlight">Football</span>
+      <span class="skill-tag highlight">Yapping</span>
+    </div>
+  </section>
+
+  <!-- TAJWAR FILES -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <span class="section-title">Tajwar Files</span>
+      <span class="section-line"></span>
+    </div>
+
+    <button class="gallery-toggle-btn" onclick="toggleGallery()">
+      <span id="gallery-icon">📂</span>
+      <span id="gallery-label">Open Tajwar Files</span>
+    </button>
+
+    <div id="gallery-content" style="display:none;">
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all',this)">🗂 All</button>
+        <button class="filter-tab" onclick="setFilter('image',this)">🖼 Images</button>
+        <button class="filter-tab" onclick="setFilter('video',this)">🎬 Videos</button>
+      </div>
+
+      <!-- Grid -->
+      <div class="gal-grid">
+        <div class="gal-item" data-type="image" onclick="openLightbox('1.png','image')">
+          <img src="1.png" alt="Photo 1" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('2.png','image')">
+          <img src="2.png" alt="Photo 2" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('3.png','image')">
+          <img src="3.png" alt="Photo 3" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('4.png','image')">
+          <img src="4.png" alt="Photo 4" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('5.png','image')">
+          <img src="5.png" alt="Photo 5" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('6.png','image')">
+          <img src="6.png" alt="Photo 6" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('7.png','image')">
+          <img src="7.png" alt="Photo 7" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('8.png','image')">
+          <img src="8.png" alt="Photo 8" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item" data-type="image" onclick="openLightbox('9.jpg','image')">
+          <img src="9.jpg" alt="Photo 9" onerror="this.closest('.gal-item').style.display='none'">
+        </div>
+        <div class="gal-item video-item" data-type="video" onclick="openLightbox('10.mp4','video')">
+          <video src="10.mp4" muted playsinline preload="metadata" class="vid-thumb" onerror="this.closest('.gal-item').style.display='none'"></video>
+          <div class="play-overlay">▶</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="handleLbClick(event)">
+      <div class="lb-inner">
+        <button class="lb-close" onclick="closeLightbox()">✕</button>
+        <img id="lightbox-img" src="" alt="">
+        <video id="lightbox-vid" controls playsinline></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <span class="section-title">Experience</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="exp-list">
+      <div class="exp-item">
+        <div class="exp-year">2020–2022</div>
+        <div class="exp-content">
+          <div class="exp-role">Dependent on Parents</div>
+          <div class="exp-company">Family</div>
+          <div class="exp-desc">Fully dependent on parents' money and decisions. Big dreams of going abroad, leaving everything in their hands.</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-year">2023–2025</div>
+        <div class="exp-content">
+          <div class="exp-role">Reality Check</div>
+          <div class="exp-company">Life</div>
+          <div class="exp-desc">Realized that some hard work might actually be necessary. A slow but honest awakening that things won't just happen on their own.</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-year">2026</div>
+        <div class="exp-content">
+          <div class="exp-role">Still Delusional</div>
+          <div class="exp-company">My Own Head</div>
+          <div class="exp-desc">Still convinced parents will somehow take me to a better country — despite the family not having enough money for a visa, let alone a flight ticket to anywhere worth going.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <span class="section-title">Education</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="edu-list">
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Kindergarten — Passed</div>
+          <div class="edu-school">The one and only clean win</div>
+        </div>
+        <div class="edu-year">—</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 1 — Passed</div>
+          <div class="edu-school">Decent start after all</div>
+        </div>
+        <div class="edu-year">—</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 2 — Failed Once, Then Passed</div>
+          <div class="edu-school">Took a second attempt but got there</div>
+        </div>
+        <div class="edu-year">—</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 3 & 4 — Passed (COVID-19 Era)</div>
+          <div class="edu-school">Exclusively via cheating. Pandemic made it easy.</div>
+        </div>
+        <div class="edu-year">2020</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 5 — Failed, Barely Passed</div>
+          <div class="edu-school">Scraped through by the skin of teeth</div>
+        </div>
+        <div class="edu-year">—</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 6 & 7 — Curriculum Changed, Zero Study</div>
+          <div class="edu-school">New syllabus, same zero effort. Somehow passed.</div>
+        </div>
+        <div class="edu-year">—</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 8 — Passed (Hardly)</div>
+          <div class="edu-school">Another miracle finish</div>
+        </div>
+        <div class="edu-year">—</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-main">
+          <div class="edu-degree">Grade 9 — Ongoing (Coaching Dependent)</div>
+          <div class="edu-school">Parents enrolled in multiple coaching centres. They believe. Results pending.</div>
+        </div>
+        <div class="edu-year">2026</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <span class="section-title">Interests</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="interest-grid">
+      <div class="interest-card">
+        <div class="interest-icon">✈️</div>
+        <div class="interest-name">Travel</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">⚽</div>
+        <div class="interest-name">Football</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">▶️</div>
+        <div class="interest-name">Watching YouTube & Thinking I'm Multitasking</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">🧠</div>
+        <div class="interest-name">Multitasking</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">🤖</div>
+        <div class="interest-name">ChatGPT is Always Correct</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section>
+    <div class="section-head">
+      <span class="section-num">08</span>
+      <span class="section-title">Contact</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="contact-row">
+      <a href="https://wa.me/8801717580091" class="contact-btn" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.855L.057 23.57a.75.75 0 00.918.919l5.814-1.479A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 01-4.964-1.36l-.355-.212-3.686.937.977-3.585-.232-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+        WhatsApp · +880 1717 580091
+      </a>
+      <a href="https://wa.me/8801711231614" class="contact-btn" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.855L.057 23.57a.75.75 0 00.918.919l5.814-1.479A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.726 9.726 0 01-4.964-1.36l-.355-.212-3.686.937.977-3.585-.232-.368A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+        WhatsApp · +880 1711 231614
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 · Mir Tajwar Alam</span>
+    <span>Personal · Private</span>
+  </footer>
+
+</div>
+
+<script>
+  function toggleGallery() {
+    const content = document.getElementById('gallery-content');
+    const label = document.getElementById('gallery-label');
+    const icon = document.getElementById('gallery-icon');
+    const open = content.style.display === 'none';
+    content.style.display = open ? 'block' : 'none';
+    label.textContent = open ? 'Close Tajwar Files' : 'Open Tajwar Files';
+    icon.textContent = open ? '📁' : '📂';
+  }
+
+  function setFilter(type, btn) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.gal-item').forEach(item => {
+      item.style.display = (type === 'all' || item.dataset.type === type) ? '' : 'none';
+    });
+  }
+
+  function openLightbox(src, type) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const vid = document.getElementById('lightbox-vid');
+    if (type === 'video') {
+      img.style.display = 'none';
+      vid.style.display = 'block';
+      vid.src = src;
+      vid.play();
+    } else {
+      vid.style.display = 'none';
+      vid.pause(); vid.src = '';
+      img.style.display = 'block';
+      img.src = src;
+    }
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    const vid = document.getElementById('lightbox-vid');
+    lb.classList.remove('open');
+    vid.pause(); vid.src = '';
+    document.getElementById('lightbox-img').src = '';
+    document.body.style.overflow = '';
+  }
+
+  function handleLbClick(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+
+</body>
+</html>
